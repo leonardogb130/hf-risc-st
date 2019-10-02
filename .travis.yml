@@ -11,6 +11,9 @@ addons:
     packages:
     - g++-6
     - clang-3.8
+install: 
+  # cppcheck
+  - sudo apt-get install -qq cppcheck
 script:
   - make
   - make test
