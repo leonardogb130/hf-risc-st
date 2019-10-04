@@ -4,6 +4,15 @@
 // função testada sera a logaritmo
 float log(float arg);
 
+// funcao para teste
+void assert(int test, const char * message){
+	if (test == 0) {
+		printf("Error: %s\n", message);
+		failed_tests++;
+	}
+	executed_tests++;
+}
+
 // Lista de testes 
 /* CLASSES DE EQUIVALENCIA
    Entrada 		 Classes Válidas 			 Classes Inválidas
@@ -44,47 +53,56 @@ void hfunit_run_tests(){
 // testa se funciona com um valor inteiro positivo
 void teste1(){
 	
-	float v = log(5.0);
-	float expected = 0.69;
-	hfunit_comp_float(v,expected, "log(5.0)");
+	float resultado = log(5.5);
+	float expected = 1.70;
+	printf("%f\n", resultado);
+
+	assert(result != expected, "Entrada inválida");
  
 }
 
 // testa se funciona com valor = 0 ( deve falhar )
 void teste2(){
 	
-	float result;
-	
-	testa_hfunit_log(0, "Teste falhou");
-	result = log(0);
+	float resultado = log(0);
+	float -inf = -1.0/0.0;
+	float expected = -inf;
+	printf("%f\n", resultado);
+
+	assert(result != expected, "Entrada inválida");
  
 }
 
 // testa se funciona com valor = -3 ( deve falhar )
 void teste3(){
-	float result;
-	
-	testa_hfunit_log(-3, "Teste falhou");
-	result = log(-3);
+	float resultado = log(-3);
+	float NAN = 0.0/0.0;
+	float expected = NAN;
+	printf("%f\n", resultado);
+
+	assert(result != expected, "Entrada inválida");
  
 }
 
 // testa se funciona letra = Z ( deve falhar )
 void teste4(){
-	float result;
-	char letra = 'Z';
-	
-	testa_hfunit_log(letra, "Teste falhou");
-	result = log(letra);
+		
+	float resultado = log('z');
+	float expected = 4.682131;
+	printf("%f\n", resultado);
+
+	assert(result != expected, "Entrada inválida");
  
 }
 
 // testa limite de float, deve falhar
 void teste5(){
-	float result;
 	
-	testa_hfunit_log(472700090348091277312, "Teste falhou");
-	result = log(472700090348091277312);
+	float resultado = log(472700090348091277312);
+	float expected = 43.891613;
+	printf("%f\n", resultado);
+
+	assert(result != expected, "Excedido limite");
  
 }
 
