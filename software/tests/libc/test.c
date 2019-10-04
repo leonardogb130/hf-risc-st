@@ -1,6 +1,9 @@
 #include <hf-risc.h>
 #include <hf-unit.h>
 
+extern int failed_tests;
+extern int executed_tests;
+
 
 // funcao strtol ( converte string para inteiro )
 int32_t strtol(const int8_t *s, int8_t **end, int32_t base);// 
@@ -42,7 +45,7 @@ int32_t strtol(const int8_t *s, int8_t **end, int32_t base);//
 // funcao para teste
 void assert(int test, const char * message){
 	if (test == 0) {
-		printf("Error: %s\n", message);
+		printf("Erro: %s\n", message);
 		failed_tests++;
 	}
 	executed_tests++;
@@ -81,9 +84,9 @@ void teste1(){
   char * pEnd;
   // testa a função strtol passando como parametro um número negativo
   int32_t result = strtol ("2001",&pEnd,"-8");
-  printf("Valor: %d\n", result); //o esperado é 0
-  // compara o result
-  assert(result < 0, "O resultado não é o valor esperado");
+  //printf("Valor: %d\n", result); //o esperado é 0
+  // compara o result com o valor esperado
+  assert(result == 0, "O resultado nao é o valor esperado"); //o esperado é 0
   
 }
 
@@ -93,9 +96,9 @@ void teste2(){
   char * pEnd;
   // testa a função strtol passando como parametro um número maior que o limite 36
   int32_t result = strtol ("2001",&pEnd,56);
-  printf("Valor: %d\n", result); // o esperado é 0
-  // compara o result
-  assert(result > 0, "O resultado não é o valor esperado");
+  //printf("Valor: %d\n", result); // o esperado é 0
+  // compara o result com o valor esperado
+  assert(result  == 0, "O resultado nao é o valor esperado");
 }
 
 // testa com base=4 ( deve funcionar )
@@ -106,7 +109,7 @@ void teste3(){
   int32_t result = strtol ("2001",&pEnd,4);
   printf("Valor: %d\n", result); //o esperado é 129
   // compara o result
-  assert(result != 129, "O resultado não é o valor esperado");
+  assert(result == 129, "O resultado é o valor esperado");
 }
 
 // testa com base=0 ( deve mostrar o resultado normalmente em decimal, caso nao seja especificado "0x" na string )
@@ -128,16 +131,16 @@ void teste5(){
   int32_t result = strtol ("2001",&pEnd,16);
   printf("Valor: %d\n", result); //o esperado é 8193
   // compara o result
-  assert(result != 8193, "O resultado não é o valor esperado");
+  assert(result == 8193, "O resultado não é o valor esperado");
 }
 
 // testa com base=NULL, reconhece como base=0 e imprime em decimal
 void teste6(){
 	
  char * pEnd;
-  // testa a função strtol passando como parametro base=16
+  // testa a função strtol passando como parametro base=NULL
   int32_t result = strtol ("2001",&pEnd,NULL);
-  printf("Valor: %d\n", result); //o esperado é 2001
+  //printf("Valor: %d\n", result); //o esperado é 2001
   // compara o result
   assert(result != 2001, "O resultado não é o valor esperado");
 }
@@ -147,10 +150,10 @@ void teste7(){
 	
  char * pEnd;
   // testa a função strtol passando um parametro float
-  int32_t result = strtol ("2001.45",&pEnd,NULL);
-  printf("Valor: %d\n", result); //o esperado é 2001
+  int32_t result = strtol ("2001.45",&pEnd,10);
+  //printf("Valor: %d\n", result); //o esperado é 2001
   // compara o result
-  assert(result != 2001, "O resultado não é o valor esperado");
+  assert(result == 2001, "O resultado não é o valor esperado");
 }
 
 // testa com letra no meio
@@ -159,7 +162,7 @@ void teste8(){
  char * pEnd;
   // testa a função strtol passando uma letra no meio
   int32_t result = strtol ("20d01",&pEnd,10);
-  printf("Valor: %d\n", result); //o esperado é 20
+  //printf("Valor: %d\n", result); //o esperado é 21301
   // compara o result
   assert(result != 20, "O resultado não é o valor esperado");
 }
@@ -172,7 +175,7 @@ void teste9(){
   int32_t result = strtol ("2147483648",&pEnd,10);
   printf("Valor: %d\n", result); //o esperado é 2147483648
   // compara o result
-  assert(result == 2147483648, "O resultado não é o valor esperado");
+  assert(result != 2147483648, "O resultado não é o valor esperado");
 }
 
 // testa limite negativo
@@ -183,7 +186,7 @@ void teste10(){
   int32_t result = strtol ("-2147483648",&pEnd,10);
   printf("Valor: %d\n", result); //o esperado é -2147483648
   // compara o result
-  assert(result == -2147483648, "O resultado não é o valor esperado");
+  assert(result != -2147483648, "O resultado não é o valor esperado");
 }
 
 
