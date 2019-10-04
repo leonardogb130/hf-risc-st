@@ -8,82 +8,118 @@ just change the variable MATRIX_TYPE in the makefile
 #include <hf-risc.h>
 #include <hf-unit.h>
 
+// função testada sera a matriz identidade, onde se i=j ,deve-se ser 1, caso contrario 0
+struct Matrix setEye(int order);
 
-// list of individual tests
-//void sqrt1_test();
-//void sqrt4_test();
-void super_mat_test();
+// Lista de testes 
+/* CLASSES DE EQUIVALENCIA
+   Entrada 		 			 		Classes Válidas 			 Classes Inválidas
+   Seta '1' caso i=j         		i=j  						 i!=j
+   
+   Ordem da matriz					Ordem é um número inteiro    Ordem é um número inteiro menor ou igual a 0
+									positivo                     Ordem não é um número inteiro
 
-// main test
+  CASOS DE TESTE DE EQUIVALENCIA
+  Seta '1' caso i=j				 	 Ordem da matriz					 			Saida esperada
+  i=3 e j=3                      	 -                                              '1'
+  i=1 e j=2                          -                                              '0'
+  -                                  1												Matriz 1x1
+  -                                  0												Erro: A ordem deve ser um número inteiro positivo
+  -                                  -3												Erro: A ordem deve ser um número inteiro positivo
+  
+ 
+  CASOS DE TESTE VALOR LIMITE
+  Seta '1' caso i=j				 	 Ordem da matriz					 			Saida esperada
+  -                                  0.99											Erro: A ordem deve ser um número inteiro positivo
+  -                                  6700000000000000000000000000					Erro: Excedido o tamanho máximo permitido de tipo int
+
+*/
+
+// lista de testes
+void teste1();
+void teste2();
+void teste3();
+void teste4();
+void teste5();
+void teste6();
+
+
+// main tests
 void hfunit_run_tests(){
-	super_mat_test();
+	teste1();
+	teste2();
+	teste3();
+	teste4();
+	teste5();
+	teste6();
+
 }
+//printa matriz identidade de tamanho 3, onde i=j, deve funcionar
+void teste1() {
 
-// place here a nice description for each test
-// eu peguei um exemplao só p vcs verem como usar as funcoes
-// mas vcs vao ter q separar bem os teste. nao pode fazer assim !!!
-void super_mat_test() {
+struct Matrix M1;
 
-struct Matrix M1, M2, M3, M4, M5, M6, M7;
-typ_var Multiplicator = val(5);
-
-typ_var val1[16] = {val(1),val(2),val(3),val(4),val(5),val(6),val(7),val(8),val(9),val(10),val(11),val(12),val(13),val(14),val(15),val(16)};
-typ_var val2[16] = {val(2),val(3),val(4),val(5),val(6),val(7),val(8),val(9),val(10),val(11),val(12),val(13),val(14),val(15),val(16),val(17)};
-typ_var val3[16] = {val(4),val(2),val(2),val(2),val(0),val(1),val(-3),val(3),val(0),val(-1),val(3),val(3),val(0),val(3),val(1),val(1)};
-
-M1 = set_values(4, 4, val1);
-M2 = set_values(4, 4, val2);
-M3 = set_values(4, 4, val3);
-
-//----------------------------FUNCTIONS TESTS-----------------------------------
-
-printf("Matrix 1 is:\n");
+printf("Identity Matrix of size %d by %d:\n", 3, 3);
+M1 = setEye(3);
+testa_hfunit_matriz(3, "Teste passou");
 print_matrix(M1);
-printf("Matrix 2 is:\n");
-print_matrix(M2);
-printf("Matrix 3 is:\n");
-print_matrix(M3);
-printf("Transposed of Matrix 1 is:\n");
-M4 = transposed(M1);
-print_matrix(M4);
-printf("Sum of Matrix 1 and 2 is:\n");
-M5 = sum(M1, M2);
-print_matrix(M5);
-printf("Subtraction of Matrix 1 and 2 is:\n");
-M5 = subtraction(M1, M2);
-print_matrix(M5);
-printf("Multiplication of Matrix 1 and 2 is:\n");
-M5 = multiplication(M1, M2);
-print_matrix(M5);
-printf("Multiplication of Matrix 1 by ");
-SHOW(Multiplicator);
-printf(":\n");
-M5 = multE(M1, Multiplicator);
-print_matrix(M5);
-printf("Division of Matrix 1 by ");
-SHOW(Multiplicator);
-printf(":\n");
-M5 = divE(M1, Multiplicator);
-print_matrix(M5);
-printf("Inverse of Matrix 3 is:\n");
-M5 = Invert(M3);
-print_matrix(M5);
-printf("Matrix of zeros of size %d by %d:\n", 4, 4);
-M5 = zeros(4, 4);
-print_matrix(M5);
-printf("Identity Matrix of size %d by %d:\n", 4, 4);
-M5 = setEye(4);
-print_matrix(M5);
-printf("Matrix of ones of size %d by %d:\n", 3, 3);
-M6 = ones(3, 3);
-print_matrix(M6);
-printf("Diagonal Block Concatenation of Two Matrices:\n");
-M7 = blkdiag2(M1, M2);
-print_matrix(M7);
-int conf[4] = {2,2,8,8};
-M7 =  customMat(4, conf, M1, M2, M3, M5);
-printf("Custom Matrix Made of Four Matrices:\n");
-print_matrix(M7);
-
 
 }
+
+//printa matriz identidade de ordem 1, deve funcionar
+void teste2() {
+
+struct Matrix M1;
+
+printf("Identity Matrix of size %d by %d:\n", 1, 1);
+M1 = setEye(1);
+testa_hfunit_matriz(1, "Teste passou");
+print_matrix(M1);
+
+}
+
+//printa matriz identidade de ordem 0, deve acusar erro
+void teste3() {
+
+struct Matrix M1;
+
+M1 = setEye(0);
+testa_hfunit_matriz(0, "Teste falhou");
+print_matrix(M1);
+
+}
+
+//printa matriz identidade de ordem negativa, deve acusar erro
+void teste4() {
+
+struct Matrix M1;
+
+M1 = setEye(-3);
+testa_hfunit_matriz(-3, "Teste falhou");
+print_matrix(M1);
+
+}
+
+//teste de limites da matriz, limite minimo, deve falhar pois não é um núumero inteiro
+void teste5() {
+
+struct Matrix M1;
+
+M1 = setEye(0.99);
+testa_hfunit_matriz(0.99, "Teste falhou");
+print_matrix(M1);
+
+}
+
+//teste de limites da matriz, limite maximo, deve falhar pois ultrapassa limite de tipo int
+void teste6() {
+
+struct Matrix M1;
+
+M1 = setEye(5);
+testa_hfunit_matriz(6700000000000000000000000000, "Teste falhou");
+print_matrix(M1);
+
+}
+
+
