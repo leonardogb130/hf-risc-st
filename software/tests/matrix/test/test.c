@@ -11,6 +11,14 @@ just change the variable MATRIX_TYPE in the makefile
 // função testada sera a matriz identidade, onde se i=j ,deve-se ser 1, caso contrario 0
 struct Matrix setEye(int order);
 
+void assert(int test, char * message) {
+	executed_tests++;
+	if (test != 0) {
+		printf("Error: %s\n", message);
+		failed_tests++;
+	}
+}
+
 // Lista de testes 
 /* CLASSES DE EQUIVALENCIA
    Entrada 		 			 		Classes Válidas 			 Classes Inválidas
@@ -34,6 +42,14 @@ struct Matrix setEye(int order);
   -                                  6700000000000000000000000000					Erro: Excedido o tamanho máximo permitido de tipo int
 
 */
+
+void assert(int test, char * message) {
+	executed_tests++;
+	if (test != 0) {
+		printf("Error: %s\n", message);
+		failed_tests++;
+	}
+}
 
 // lista de testes
 void teste1();
@@ -61,8 +77,8 @@ struct Matrix M1;
 
 printf("Identity Matrix of size %d by %d:\n", 3, 3);
 M1 = setEye(3);
-testa_hfunit_matriz(3, "Teste passou");
 print_matrix(M1);
+//assert();
 
 }
 
@@ -73,7 +89,7 @@ struct Matrix M1;
 
 printf("Identity Matrix of size %d by %d:\n", 1, 1);
 M1 = setEye(1);
-testa_hfunit_matriz(1, "Teste passou");
+//testa_hfunit_matriz(1, "Teste passou");
 print_matrix(M1);
 
 }
