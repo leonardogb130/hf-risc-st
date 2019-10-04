@@ -2,7 +2,6 @@
 #include <hf-unit.h>
 
 
-
 // funcao strtol ( converte string para inteiro )
 int32_t strtol(const int8_t *s, int8_t **end, int32_t base);// 
 
@@ -40,6 +39,15 @@ int32_t strtol(const int8_t *s, int8_t **end, int32_t base);//
    b=NULL														-																-																						 b=NULL																						Sequencia de digitos decimais					
 */
 
+// funcao para teste
+void assert(int test, const char * message){
+	if (test == 0) {
+		printf("Error: %s\n", message);
+		failed_tests++;
+	}
+	executed_tests++;
+}
+
 // testes
 void teste1(); // testa base negativa
 void teste2();
@@ -47,6 +55,10 @@ void teste3();
 void teste4();
 void teste5();
 void teste6();
+void teste7();
+void teste8();
+void teste9();
+void teste10();
 
 
 // main test
@@ -57,96 +69,126 @@ void hfunit_run_tests(){
 	teste4();
 	teste5();
 	teste6();
+	teste7();
+	teste8();
+	teste9();
+	teste10();
 }
 
 // testa com uma base negativa, deve acusar erro
 void teste1(){
 	
- /* //char szNumbers[] = "2001";
   char * pEnd;
-  long int result;
-  int expected = 2001;
+  // testa a função strtol passando como parametro um número negativo
+  int32_t result = strtol ("2001",&pEnd,"-8");
+  printf("Valor: %d\n", result); //o esperado é 0
+  // compara o result
+  assert(result < 0, "O resultado não é o valor esperado");
   
-  result = strtol (2001,NULL,-8);
-  //testa_hfunit_base(-8, "Teste falhou");
- 
-  //printf (result);
-  
-  hfunit_comp_float(result,expected, ("strtol(\"2001\",NULL,-8)"));
-*/
 }
 
 // testa com base maior que 32 ( deve falhar )
 void teste2(){
 	
-  char szNumbers[] = "teste2";
   char * pEnd;
-  long int li1;
-  
-  li1 = strtol (szNumbers,&pEnd,56);
-  testa_hfunit_base(56, "Teste falhou");
- 
-  printf (li1);
+  // testa a função strtol passando como parametro um número maior que o limite 36
+  int32_t result = strtol ("2001",&pEnd,56);
+  printf("Valor: %d\n", result); // o esperado é 0
+  // compara o result
+  assert(result > 0, "O resultado não é o valor esperado");
 }
 
 // testa com base=4 ( deve funcionar )
 void teste3(){
 	
-  int string = 1000;
-  //char * pEnd;
-  int resultado;
-  int base = 4;
-  int expected = 1000;
-  
-  resultado = strtol (string,0,base);
-  //testa_hfunit_base(4, "Teste passou");
-  hfunit_comp_float(resultado,expected," ");
- 
-  printf ("Equivalente em decimal: %d\n", resultado);
+  char * pEnd;
+  // testa a função strtol passando como parametro base=4
+  int32_t result = strtol ("2001",&pEnd,4);
+  printf("Valor: %d\n", result); //o esperado é 129
+  // compara o result
+  assert(result != 129, "O resultado não é o valor esperado");
 }
 
 // testa com base=0 ( deve mostrar o resultado normalmente em decimal, caso nao seja especificado "0x" na string )
 void teste4(){
   
-  int string = 1000;  // base4 = 33220
-  //char * pEnd;
-  int resultado;
-  int base = 0;
-  int expected = 1000;
-  
-  resultado = strtol (string,0,base);
-  //testa_hfunit_base(4, "Teste passou");
-  hfunit_comp_float(resultado,expected," ");
- 
-  printf ("Equivalente em decimal: %d\n", resultado);
-  printf ("Equivalente esperado: %d\n", expected);
+  char * pEnd;
+  // testa a função strtol passando como parametro base=0
+  int32_t result = strtol ("2001",&pEnd,0);
+  printf("Valor: %d\n", result); //o esperado é 2001
+  // compara o result
+  assert(result != 2001, "O resultado não é o valor esperado");
 }
 
 // testa com base=16 , "0x"
 void teste5(){
 	
-  char szNumbers[] = "0xffff";
   char * pEnd;
-  long int li1;
-  
-  li1 = strtol (szNumbers,&pEnd,0);
-  testa_hfunit_base(0, "Teste passou");
- 
-  printf ("Equivalente em decimal: %ld\n", li1);
+  // testa a função strtol passando como parametro base=16
+  int32_t result = strtol ("2001",&pEnd,16);
+  printf("Valor: %d\n", result); //o esperado é 8193
+  // compara o result
+  assert(result != 8193, "O resultado não é o valor esperado");
 }
 
 // testa com base=NULL, reconhece como base=0 e imprime em decimal
 void teste6(){
 	
-  char szNumbers[] = "-teste";
-  char * pEnd;
-  long int li1;
-  
-  li1 = strtol (szNumbers,NULL,NULL);
-  testa_hfunit_base(NULL, "Teste passou");
- 
-  printf ("Equivalente em decimal: %ld\n", li1);
+ char * pEnd;
+  // testa a função strtol passando como parametro base=16
+  int32_t result = strtol ("2001",&pEnd,NULL);
+  printf("Valor: %d\n", result); //o esperado é 2001
+  // compara o result
+  assert(result != 2001, "O resultado não é o valor esperado");
 }
+
+// testa com parametro float
+void teste7(){
+	
+ char * pEnd;
+  // testa a função strtol passando um parametro float
+  int32_t result = strtol ("2001.45",&pEnd,NULL);
+  printf("Valor: %d\n", result); //o esperado é 2001
+  // compara o result
+  assert(result != 2001, "O resultado não é o valor esperado");
+}
+
+// testa com letra no meio
+void teste8(){
+	
+ char * pEnd;
+  // testa a função strtol passando uma letra no meio
+  int32_t result = strtol ("20d01",&pEnd,10);
+  printf("Valor: %d\n", result); //o esperado é 20
+  // compara o result
+  assert(result != 20, "O resultado não é o valor esperado");
+}
+
+// testa limite positivo
+void teste9(){
+	
+ char * pEnd;
+  // testa a função strtol passando um parametro no limite
+  int32_t result = strtol ("2147483648",&pEnd,10);
+  printf("Valor: %d\n", result); //o esperado é 2147483648
+  // compara o result
+  assert(result == 2147483648, "O resultado não é o valor esperado");
+}
+
+// testa limite negativo
+void teste10(){
+	
+ char * pEnd;
+  // testa a função strtol passando um parametro no limite
+  int32_t result = strtol ("-2147483648",&pEnd,10);
+  printf("Valor: %d\n", result); //o esperado é -2147483648
+  // compara o result
+  assert(result == -2147483648, "O resultado não é o valor esperado");
+}
+
+
+
+
 
 
 
