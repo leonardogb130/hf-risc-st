@@ -8,13 +8,41 @@ just change the variable MATRIX_TYPE in the makefile
 #include <hf-risc.h>
 #include <hf-unit.h>
 
+extern int failed_tests;
+extern int executed_tests;
+
 // função testada sera a matriz identidade, onde se i=j ,deve-se ser 1, caso contrario 0
 struct Matrix setEye(int order);
 
-void assert(int test, char * message) {
-	executed_tests++;
-	if (test != 0) {
+
+// funcao para comparação
+void assert(int test, const char * message){
+	if (test == 0) {
 		printf("Error: %s\n", message);
+		failed_tests++;
+	}
+	executed_tests++;
+}
+
+
+void assert_matrix(struct Matrix m, typ_var * values, int columns, int lines) {
+	char * expectedBuffer[16];
+	char * valueBuffer[16];
+	int err = 0;
+	int i = 0;
+
+	for(int x = 0; x < columns; x++) {
+		for(int y = 0; y < lines; y++) {
+			int value = get_value(m, x, y);
+			int expected = values[++i];
+			if (value != expected) {
+				printf("Matrix value mismatch at line %d, column %d: got %s, expected %s\n", y, x, valueBuffer, expectedBuffer);
+				err = 1;
+			}
+		}
+	}
+	executed_tests++;
+	if (err == 1) {
 		failed_tests++;
 	}
 }
@@ -43,21 +71,12 @@ void assert(int test, char * message) {
 
 */
 
-void assert(int test, char * message) {
-	executed_tests++;
-	if (test != 0) {
-		printf("Error: %s\n", message);
-		failed_tests++;
-	}
-}
 
 // lista de testes
 void teste1();
 void teste2();
 void teste3();
 void teste4();
-void teste5();
-void teste6();
 
 
 // main tests
@@ -66,8 +85,6 @@ void hfunit_run_tests(){
 	teste2();
 	teste3();
 	teste4();
-	teste5();
-	teste6();
 
 }
 //printa matriz identidade de tamanho 3, onde i=j, deve funcionar
@@ -75,10 +92,20 @@ void teste1() {
 
 struct Matrix M1;
 
+float expected_list[16];
+
+float value_list[16] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
 printf("Identity Matrix of size %d by %d:\n", 3, 3);
 M1 = setEye(3);
 print_matrix(M1);
-//assert();
+
+	for (int i = 0; i < 16; i++) 
+	{
+		expected_list[i] = mul(value_list[i], 0);
+	}
+
+ assert_matrix(M1, expected_list, 3, 3);
 
 }
 
@@ -87,10 +114,20 @@ void teste2() {
 
 struct Matrix M1;
 
-printf("Identity Matrix of size %d by %d:\n", 1, 1);
+float expected_list[16];
+
+float value_list[16] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+printf("\nIdentity Matrix of size %d by %d:\n", 1, 1);
 M1 = setEye(1);
-//testa_hfunit_matriz(1, "Teste passou");
 print_matrix(M1);
+
+	for (int i = 0; i < 16; i++) 
+	{
+		expected_list[i] = mul(value_list[i], 0);
+	}
+
+ assert_matrix(M1, expected_list, 1, 1);
 
 }
 
@@ -99,42 +136,43 @@ void teste3() {
 
 struct Matrix M1;
 
+float expected_list[16];
+
+float value_list[16] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
 M1 = setEye(0);
-testa_hfunit_matriz(0, "Teste falhou");
 print_matrix(M1);
+
+
+	for (int i = 0; i < 16; i++) 
+	{
+		expected_list[i] = mul(value_list[i], 0);
+	}
+
+ assert_matrix(M1, expected_list, 0, 0);
 
 }
 
 //printa matriz identidade de ordem negativa, deve acusar erro
 void teste4() {
 
+
 struct Matrix M1;
+
+float expected_list[16];
+
+float value_list[16] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
 M1 = setEye(-3);
-testa_hfunit_matriz(-3, "Teste falhou");
 print_matrix(M1);
 
-}
 
-//teste de limites da matriz, limite minimo, deve falhar pois não é um núumero inteiro
-void teste5() {
+	for (int i = 0; i < 16; i++) 
+	{
+		expected_list[i] = mul(value_list[i], 0);
+	}
 
-struct Matrix M1;
-
-M1 = setEye(0.99);
-testa_hfunit_matriz(0.99, "Teste falhou");
-print_matrix(M1);
-
-}
-
-//teste de limites da matriz, limite maximo, deve falhar pois ultrapassa limite de tipo int
-void teste6() {
-
-struct Matrix M1;
-
-M1 = setEye(5);
-testa_hfunit_matriz(6700000000000000000000000000, "Teste falhou");
-print_matrix(M1);
+ assert_matrix(M1, expected_list, -3, -3);
 
 }
 
