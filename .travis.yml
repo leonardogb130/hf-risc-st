@@ -23,8 +23,6 @@ before_install:
  - export CXX=g++-6
  - export CC=gcc-6
  - export PATH="$PATH:/opt/riscv/bin"
- - chmod +x ./tools/download-riscv32-gcc-gdrive.sh
- - ./tools/download-riscv32-gcc-gdrive.sh
  - tar xvzf riscv-gcc.tar.gz --strip-components 2
  - export PATH=$PWD/riscv-elf/gcc-8.1.0/bin:$PATH
  - export HFOS_ROOT=$PWD
