@@ -2,6 +2,10 @@
 #include <hf-unit.h>
 #include "fixed.h"
 
+extern int failed_tests;
+extern int executed_tests;
+
+
 // função testada sera a fix_logaritmo
 fixed_t fix_log(fixed_t fp, fixed_t base);
 
@@ -47,8 +51,8 @@ void hfunit_run_tests(){
 // testa se funciona com um valor inteiro positivo, com fix, deve funcionar
 void teste1(){
 
-        // setando o valor em fixed
-        fixed_t input = fix_val(5.5f);
+    // setando o valor em fixed
+    fixed_t input = fix_val(5.5f);
 	// atribuicao do valor fixed a funcao fix_ln
 	fixed_t result = fix_log(input,10);
 
@@ -60,11 +64,11 @@ void teste1(){
 
 
 
- testa limite com fix
+ //testa limite com fix
 void teste2(){
 	
-	 // setando o valor em fixed
-        fixed_t input = fix_val(472700090348091277312);
+    // setando o valor em fixed
+    fixed_t input = fix_val(472700090348091277312);
 	// atribuicao do valor fixed a funcao fix_log
 	fixed_t result = fix_log(input,10);
 }
