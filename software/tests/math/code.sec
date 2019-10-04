@@ -3,11 +3,11 @@ test.elf:     file format elf32-littleriscv
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000135c  40000000  40000000  00000054  2**2
+  0 .text         00001528  40000000  40000000  00000054  2**2
                   CONTENTS, ALLOC, LOAD, CODE
-  1 .data         00000324  4000135c  4000135c  000013b0  2**2
+  1 .data         00000348  40001528  40001528  0000157c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          0000000c  40001680  40001680  000016d4  2**2
+  2 .bss          00000008  40001870  40001870  000018c4  2**2
                   ALLOC
-  3 .comment      00000011  00000000  00000000  000016d4  2**0
+  3 .comment      00000011  00000000  00000000  000018c4  2**0
                   CONTENTS, READONLY
