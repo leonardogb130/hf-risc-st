@@ -1,15 +1,52 @@
-
+  
 language: c
-compiler: gcc
+sudo: true
 
+git:
+  submodules: false
 
-install: 
-  # cppcheck
-  - sudo apt-get install -qq cppcheck
+compiler:
+ - gcc
 
-script: 
-  # Build and run this project
-  - make
-  - make test
-  # cppcheck
-  - cppcheck --quiet --error-exitcode=1 . 
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.8
+    packages:
+    - g++-6
+    - valgrind
+    - cppcheck
+
+before_install:
+ - ls -las
+ - export MAKEFLAGS="-j3"
+ - export CXX=g++-6
+ - export CC=gcc-6
+ - export PATH="$PATH:/opt/riscv/bin"
+ - chmod +x ./tools/download-riscv32-gcc-gdrive.sh
+ - ./tools/download-riscv32-gcc-gdrive.sh
+ - tar xvzf riscv-gcc.tar.gz --strip-components 2
+ - export PATH=$PWD/riscv-elf/gcc-8.1.0/bin:$PATH
+ - export HFOS_ROOT=$PWD
+ - echo $PWD
+
+install:
+ - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+ - gcc -o ${TRAVIS_BUILD_DIR}/hf_riscv_sim ${TRAVIS_BUILD_DIR}/tools/sim/hf_riscv_sim/hf_riscv_sim.c # Compile the riscv simulator
+
+script:
+ # Static Analysis check
+ - cppcheck ${TRAVIS_BUILD_DIR}/software/tests/ 2>&1 | grep -n --color=never \(error\) &>./error.log || true
+ - if [ ! -s "./error.log" ]; then echo No Static Analysis Errors; else cat ./error.log; exit 1; fi
+ - cd ${TRAVIS_BUILD_DIR}/software/tests
+ - chmod +x test-all.sh && ./test-all.sh
+
+after_script:
+ - ls
+
+after_success:
+ - echo "Success"
+
+after_failure:
+ - echo "Fail"
