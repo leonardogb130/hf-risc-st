@@ -54,7 +54,7 @@ void hfunit_run_tests(){
 void teste1(){
 	
 	float resultado = log(5.5);
-	float expected = 1.70;
+	float expected = 1.704748;
 	printf("%f\n", resultado);
 
 	assert(result != expected, "Entrada inválida");
